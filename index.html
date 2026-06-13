@@ -1,0 +1,1142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DyslexiRead</title>
+    <meta
+      name="description"
+      content="Free dyslexia-friendly reading tool in Malay, English, Tamil and Chinese."
+    />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/opendyslexic" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@700&display=swap"
+    />
+
+    <style>
+      /* Day mode */
+      :root {
+        --bg: #f0f7ff;
+        --bg-card: #ffffff;
+        --text: #0f172a;
+        --text-muted: #5a6a85;
+        --highlight: #ffd93d;
+        --accent: #7c3aed;
+        --accent-hover: #6d28d9;
+        --accent-light: #ede9fe;
+        --border: #c4b5fd;
+        --shadow: 0 2px 14px rgba(124, 58, 237, 0.1);
+        --font-size: 22px;
+        --line-height: 2;
+        --letter-spacing: 0.08em;
+        --radius: 16px;
+        --transition: 0.25s ease;
+      }
+
+      /* Night mode */
+      body.night {
+        --bg: #0f1117;
+        --bg-card: #1a1d27;
+        --text: #e8e8e8;
+        --text-muted: #8a8fa8;
+        --highlight: #92400e;
+        --accent: #60a5fa;
+        --accent-hover: #93c5fd;
+        --accent-light: #1e3a5f;
+        --border: #2e3245;
+        --shadow: 0 2px 16px rgba(0, 0, 0, 0.45);
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: 'OpenDyslexic', Georgia, sans-serif;
+        font-weight: bold;
+        font-size: var(--font-size);
+        line-height: var(--line-height);
+        letter-spacing: var(--letter-spacing);
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        transition:
+          background var(--transition),
+          color var(--transition);
+      }
+
+      :focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 3px;
+        border-radius: 6px;
+      }
+
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+      }
+
+      .page {
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 36px 20px 72px;
+      }
+
+      /* Night-mode toggle */
+      #night-toggle {
+        position: fixed;
+        top: 16px;
+        right: 16px;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border: 2px solid var(--border);
+        background: var(--bg-card);
+        font-size: 1.35rem;
+        line-height: 1;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: var(--shadow);
+        z-index: 1000;
+        transition:
+          background var(--transition),
+          border var(--transition),
+          transform 0.15s;
+      }
+      #night-toggle:hover {
+        transform: scale(1.12);
+      }
+      #night-toggle:active {
+        transform: scale(0.95);
+      }
+      /* Darker border so the icon stands out clearly against each background */
+      body:not(.night) #night-toggle {
+        border-color: #7c3aed;
+      }
+      body.night #night-toggle {
+        border-color: #93c5fd;
+      }
+
+      /* Header */
+      header {
+        text-align: center;
+        margin-bottom: 32px;
+        padding-bottom: 28px;
+        border-bottom: 2px solid var(--border);
+      }
+      .app-icon {
+        font-size: 2.8rem;
+        display: block;
+        margin-bottom: 6px;
+      }
+      .app-title {
+        font-size: 2rem;
+        font-weight: bold;
+        color: var(--accent);
+        margin-bottom: 6px;
+        letter-spacing: -0.01em;
+      }
+      .app-subtitle {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        margin-bottom: 22px;
+        letter-spacing: 0.02em;
+      }
+
+      /* Language tabs */
+      .lang-row {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .lang-btn {
+        padding: 9px 22px;
+        border: 2px solid var(--accent);
+        border-radius: 999px;
+        background: transparent;
+        color: var(--accent);
+        font-family: inherit;
+        font-size: 0.92rem;
+        font-weight: bold;
+        cursor: pointer;
+        letter-spacing: 0.02em;
+        transition:
+          background var(--transition),
+          color var(--transition),
+          border-color var(--transition);
+      }
+      .lang-btn:hover,
+      .lang-btn.active {
+        background: var(--accent);
+        color: #fff;
+      }
+
+      /* Cards */
+      .card {
+        background: var(--bg-card);
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius);
+        padding: 26px 24px 22px;
+        margin-bottom: 18px;
+        box-shadow: var(--shadow);
+        transition:
+          background var(--transition),
+          border var(--transition);
+      }
+      .card-label {
+        display: block;
+        font-size: 0.7rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: var(--accent);
+        margin-bottom: 14px;
+      }
+
+      /* Textarea */
+      #text-input {
+        width: 100%;
+        min-height: 148px;
+        padding: 16px;
+        font-family: 'OpenDyslexic', Georgia, sans-serif;
+        font-weight: bold;
+        font-size: 16px;
+        line-height: 1.7;
+        letter-spacing: var(--letter-spacing);
+        background: var(--bg);
+        color: var(--text);
+        border: 2px solid var(--border);
+        border-radius: 12px;
+        resize: vertical;
+        margin-bottom: 18px;
+        transition:
+          border var(--transition),
+          background var(--transition);
+      }
+      #text-input:focus {
+        border-color: var(--accent);
+        outline: none;
+      }
+      #text-input::placeholder {
+        color: var(--text-muted);
+      }
+
+      /* Button row */
+      .btn-row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      /* Buttons */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 13px 30px;
+        border-radius: 999px;
+        font-family: inherit;
+        font-size: 0.97rem;
+        font-weight: bold;
+        cursor: pointer;
+        border: none;
+        min-height: 50px;
+        white-space: nowrap;
+        letter-spacing: 0.01em;
+        transition:
+          background var(--transition),
+          box-shadow 0.15s,
+          transform 0.1s;
+      }
+      .btn:active {
+        transform: scale(0.96);
+      }
+      .btn:disabled {
+        opacity: 0.38;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .btn-primary {
+        background: var(--accent);
+        color: #fff;
+        box-shadow: 0 4px 14px rgba(124, 58, 237, 0.22);
+      }
+      .btn-primary:not(:disabled):hover {
+        background: var(--accent-hover);
+        box-shadow: 0 6px 20px rgba(124, 58, 237, 0.34);
+      }
+
+      .btn-ghost {
+        background: transparent;
+        color: var(--accent);
+        border: 2px solid var(--accent);
+      }
+      .btn-ghost:not(:disabled):hover {
+        background: var(--accent-light);
+      }
+
+      /* Settings grid */
+      .settings-grid {
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        gap: 24px;
+        flex-wrap: wrap;
+        width: 100%;
+        overflow: hidden;
+      }
+      .setting-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
+      .setting-label {
+        font-size: 0.72rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--text-muted);
+      }
+
+      /* Font-size slider */
+      input[type='range'] {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 150px;
+        height: 6px;
+        background: var(--border);
+        border-radius: 999px;
+        cursor: pointer;
+        accent-color: var(--accent);
+      }
+      input[type='range']::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: var(--accent);
+        cursor: pointer;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.22);
+      }
+      #font-size-val {
+        font-size: 1rem;
+        font-weight: bold;
+        color: var(--accent);
+      }
+
+      /* Dropdowns */
+      #speed-select {
+        padding: 10px 18px;
+        border: 2px solid var(--border);
+        border-radius: 12px;
+        background: var(--bg-card);
+        color: var(--text);
+        font-family: 'OpenDyslexic', Georgia, sans-serif;
+        font-weight: bold;
+        font-size: 0.95rem;
+        cursor: pointer;
+        min-width: 175px;
+        transition:
+          border var(--transition),
+          background var(--transition);
+        appearance: auto;
+      }
+      #voice-select {
+        padding: 10px 18px;
+        border: 2px solid var(--border);
+        border-radius: 12px;
+        background: var(--bg-card);
+        color: var(--text);
+        font-family: 'OpenDyslexic', Georgia, sans-serif;
+        font-weight: bold;
+        font-size: 0.9rem;
+        cursor: pointer;
+        width: 100%;
+        min-width: 0;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        transition:
+          border var(--transition),
+          background var(--transition);
+        appearance: auto;
+      }
+      #speed-select:focus,
+      #voice-select:focus {
+        border-color: var(--accent);
+        outline: none;
+      }
+
+      .setting-item.voice-item {
+        flex: 1 1 200px;
+        max-width: 100%;
+        align-items: stretch;
+      }
+      .setting-item.voice-item .setting-label {
+        text-align: center;
+      }
+
+      /* Progress bar */
+      .progress-wrap {
+        background: var(--border);
+        border-radius: 999px;
+        height: 7px;
+        overflow: hidden;
+        margin-top: 20px;
+      }
+      #progress-fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+        border-radius: 999px;
+        transition: width 0.35s ease;
+      }
+      #status-bar {
+        text-align: center;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin-top: 10px;
+        min-height: 22px;
+        letter-spacing: 0.01em;
+      }
+
+      /* Reading area */
+      #reading-area {
+        padding: 26px;
+        background: var(--bg-card);
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius);
+        min-height: 80px;
+        font-size: var(--font-size);
+        line-height: var(--line-height);
+        letter-spacing: var(--letter-spacing);
+        box-shadow: var(--shadow);
+        transition:
+          background var(--transition),
+          border var(--transition);
+      }
+      .chunk {
+        display: inline;
+        border-radius: 5px;
+        padding: 1px 3px;
+        transition: background 0.15s;
+      }
+      .chunk.active {
+        background: var(--highlight);
+      }
+      .reading-placeholder {
+        color: var(--text-muted);
+        font-size: 0.88rem;
+        text-align: center;
+      }
+
+      /* Footer */
+      footer {
+        text-align: center;
+        margin-top: 52px;
+        font-size: 0.76rem;
+        color: var(--text-muted);
+        line-height: 1.8;
+      }
+
+      /* Responsive */
+      @media (max-width: 500px) {
+        .btn {
+          padding: 11px 20px;
+        }
+        .settings-grid {
+          gap: 18px;
+        }
+        input[type='range'] {
+          width: 120px;
+        }
+      }
+
+      /* Tamil — scope Noto Sans Tamil only to where Tamil text is displayed.
+         Everything else (buttons, labels, UI) stays in OpenDyslexic. */
+      body.lang-ta #text-input,
+      body.lang-ta #reading-area,
+      body.lang-ta .chunk {
+        font-family: 'Noto Sans Tamil', Georgia, sans-serif;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+      }
+    </style>
+  </head>
+
+  <body>
+    <button
+      id="night-toggle"
+      aria-label="Switch to night mode"
+      aria-pressed="false"
+      title="Day / Night mode"
+    >
+      🌙
+    </button>
+
+    <div class="page">
+      <header>
+        <span class="app-icon" aria-hidden="true">📚</span>
+        <h1 class="app-title">DyslexiRead</h1>
+        <p class="app-subtitle" id="app-subtitle">
+          Free reading tool for students with dyslexia
+        </p>
+
+        <div
+          class="lang-row"
+          id="lang-group"
+          role="group"
+          aria-label="Choose language"
+        >
+          <button class="lang-btn" data-lang="ms-MY" data-code="ms">
+            🇲🇾 Melayu
+          </button>
+          <button class="lang-btn active" data-lang="en-GB" data-code="en">
+            🇬🇧 English
+          </button>
+          <button class="lang-btn" data-lang="ta-IN" data-code="ta">
+            🇮🇳 தமிழ்
+          </button>
+          <button class="lang-btn" data-lang="zh-CN" data-code="zh">
+            🇨🇳 中文
+          </button>
+        </div>
+      </header>
+
+      <!-- Step 1 — Paste text -->
+      <div class="card">
+        <span class="card-label" id="lbl-step1">Step 1 — Paste your text</span>
+        <label for="text-input" class="sr-only" id="textarea-aria-label"
+          >Paste or type your text here</label
+        >
+        <textarea
+          id="text-input"
+          placeholder="Paste your English text here…"
+          aria-labelledby="textarea-aria-label"
+          spellcheck="false"
+        ></textarea>
+      </div>
+
+      <!-- Step 2 — Settings -->
+      <div class="card">
+        <span class="card-label" id="lbl-step3">Step 2 — Adjust settings</span>
+        <div class="settings-grid">
+          <div class="setting-item">
+            <span class="setting-label" id="lbl-fontsize">Text Size</span>
+            <input
+              type="range"
+              id="font-slider"
+              min="16"
+              max="40"
+              step="2"
+              value="22"
+              aria-labelledby="lbl-fontsize"
+              aria-valuemin="16"
+              aria-valuemax="40"
+            />
+            <span id="font-size-val">22px</span>
+          </div>
+
+          <div class="setting-item">
+            <label class="setting-label" for="speed-select" id="lbl-speed"
+              >Reading Speed</label
+            >
+            <select id="speed-select" aria-labelledby="lbl-speed">
+              <option value="0.6" id="opt-very-slow">🐢 Very Slow</option>
+              <option value="0.8" id="opt-slow">🚶 Slow</option>
+              <option value="1.0" selected id="opt-normal">🚴 Normal</option>
+              <option value="1.2" id="opt-fast">🚗 Fast</option>
+              <option value="1.5" id="opt-very-fast">✈️ Very Fast</option>
+            </select>
+          </div>
+
+          <div class="setting-item voice-item">
+            <label class="setting-label" for="voice-select" id="lbl-voice"
+              >Voice</label
+            >
+            <select id="voice-select" aria-labelledby="lbl-voice">
+              <option>Loading voices…</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3 — Playback -->
+      <div class="card">
+        <span class="card-label" id="lbl-step2">Step 3 — Read aloud</span>
+
+        <div class="btn-row">
+          <button class="btn btn-primary" id="btn-play" disabled>
+            <span id="btn-play-icon">▶</span>
+            <span id="btn-play-txt">Read Aloud</span>
+          </button>
+          <button class="btn btn-ghost" id="btn-pause" disabled>
+            <span id="btn-pause-icon">⏸</span>
+            <span id="btn-pause-txt">Pause</span>
+          </button>
+        </div>
+
+        <div
+          class="progress-wrap"
+          id="progress-container"
+          role="progressbar"
+          aria-label="Reading progress"
+          aria-valuenow="0"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        >
+          <div id="progress-fill"></div>
+        </div>
+
+        <div id="status-bar" aria-live="polite" aria-atomic="true"></div>
+      </div>
+
+      <!-- Reading area -->
+      <div
+        id="reading-area"
+        role="region"
+        aria-label="Reading area"
+        aria-live="polite"
+        tabindex="0"
+      >
+        <p class="reading-placeholder" id="reading-placeholder">
+          Your text will appear here after loading.
+        </p>
+      </div>
+
+      <footer>
+        <p id="footer-txt">Free forever · No account · No data sent anywhere</p>
+      </footer>
+    </div>
+
+    <script>
+      /* ── Translations ─────────────────────────────────────────────────── */
+      const T = {
+        en: {
+          htmlLang: 'en',
+          pageTitle: 'DyslexiRead — Dyslexia Reader',
+          subtitle: 'Free reading tool for students with dyslexia',
+          lbl_lang_group: 'Choose language',
+          lbl_step1: 'Step 1 — Paste your text',
+          textarea_label: 'Paste or type your text here',
+          placeholder: 'Paste your English text here\u2026',
+          lbl_step2: 'Step 3 — Read aloud',
+          btn_play: 'Read Aloud',
+          btn_from_start: 'Read from Start',
+          btn_pause: 'Pause',
+          btn_resume: 'Resume',
+          lbl_step3: 'Step 2 — Adjust settings',
+          lbl_fontsize: 'Text Size',
+          lbl_speed: 'Reading Speed',
+          lbl_voice: 'Voice',
+          opt_very_slow: '\uD83D\uDC22 Very Slow',
+          opt_slow: '\uD83D\uDEB6 Slow',
+          opt_normal: '\uD83D\uDEB4 Normal',
+          opt_fast: '\uD83D\uDE97 Fast',
+          opt_very_fast: '\u2708\uFE0F Very Fast',
+          reading_placeholder: 'Your text will appear here after loading.',
+          footer: 'Free forever \u00B7 No account \u00B7 No data sent anywhere',
+          night_aria_on: 'Switch to day mode',
+          night_aria_off: 'Switch to night mode',
+          no_voices: 'No voices found \u2014 install language pack',
+          st_empty: '\u26A0\uFE0F Please paste some text first.',
+          st_reading: (i, n) => `Reading ${i} of ${n}`,
+          st_paused: '\u23F8 Paused.',
+          st_done: '\u2705 Finished!',
+          st_lang: (l) => `Language: ${l}`,
+          st_no_voices:
+            '\u26A0\uFE0F No voices found. Install the language pack in system settings.',
+        },
+        ms: {
+          htmlLang: 'ms',
+          pageTitle: 'DyslexiRead \u2014 Pembaca Mesra Disleksia',
+          subtitle: 'Alat bacaan percuma untuk pelajar disleksia',
+          lbl_lang_group: 'Pilih bahasa',
+          lbl_step1: 'Langkah 1 \u2014 Tampal teks anda',
+          textarea_label: 'Tampal atau taip teks anda di sini',
+          placeholder: 'Tampal teks Bahasa Melayu anda di sini\u2026',
+          lbl_step2: 'Langkah 3 \u2014 Baca kuat',
+          btn_play: 'Baca Kuat',
+          btn_from_start: 'Baca Dari Awal',
+          btn_pause: 'Jeda',
+          btn_resume: 'Teruskan',
+          lbl_step3: 'Langkah 2 \u2014 Laraskan tetapan',
+          lbl_fontsize: 'Saiz Teks',
+          lbl_speed: 'Laju Bacaan',
+          lbl_voice: 'Suara',
+          opt_very_slow: '\uD83D\uDC22 Sangat Perlahan',
+          opt_slow: '\uD83D\uDEB6 Perlahan',
+          opt_normal: '\uD83D\uDEB4 Sederhana',
+          opt_fast: '\uD83D\uDE97 Laju',
+          opt_very_fast: '\u2708\uFE0F Sangat Laju',
+          reading_placeholder:
+            'Teks anda akan muncul di sini selepas dimuatkan.',
+          footer:
+            'Percuma selamanya \u00B7 Tiada akaun \u00B7 Tiada data dihantar',
+          night_aria_on: 'Tukar ke mod siang',
+          night_aria_off: 'Tukar ke mod malam',
+          no_voices: 'Tiada suara \u2014 pasang pek bahasa',
+          st_empty: '\u26A0\uFE0F Sila tampal teks dahulu.',
+          st_reading: (i, n) => `Membaca ${i} daripada ${n}`,
+          st_paused: '\u23F8 Dijeda.',
+          st_done: '\u2705 Selesai!',
+          st_lang: (l) => `Bahasa: ${l}`,
+          st_no_voices:
+            '\u26A0\uFE0F Tiada suara dijumpai. Pasang pek bahasa dalam tetapan sistem.',
+        },
+        zh: {
+          htmlLang: 'zh',
+          pageTitle: 'DyslexiRead \u2014 \u9605\u8BFB\u8F85\u52A9\u5DE5\u5177',
+          subtitle:
+            '\u4E3A\u6709\u9605\u8BFB\u969C\u788D\u7684\u5B66\u751F\u63D0\u4F9B\u7684\u514D\u8D39\u9605\u8BFB\u5DE5\u5177',
+          lbl_lang_group: '\u9009\u62E9\u8BED\u8A00',
+          lbl_step1:
+            '\u7B2C\u4E00\u6B65 \u2014 \u7C98\u8D34\u60A8\u7684\u6587\u5B57',
+          textarea_label:
+            '\u5728\u6B64\u7C98\u8D34\u6216\u8F93\u5165\u6587\u5B57',
+          placeholder:
+            '\u5728\u6B64\u7C98\u8D34\u60A8\u7684\u4E2D\u6587\u6587\u5B57\u2026',
+          lbl_step2: '\u7B2C\u4E09\u6B65 \u2014 \u6717\u8BFB',
+          btn_play: '\u6717\u8BFB',
+          btn_from_start: '\u4ECE\u5934\u5F00\u59CB',
+          btn_pause: '\u6682\u505C',
+          btn_resume: '\u7EE7\u7EED',
+          lbl_step3: '\u7B2C\u4E8C\u6B65 \u2014 \u8C03\u6574\u8BBE\u7F6E',
+          lbl_fontsize: '\u5B57\u4F53\u5927\u5C0F',
+          lbl_speed: '\u6717\u8BFB\u901F\u5EA6',
+          lbl_voice: '\u8BED\u97F3',
+          opt_very_slow: '\uD83D\uDC22 \u975E\u5E38\u6162',
+          opt_slow: '\uD83D\uDEB6 \u6162',
+          opt_normal: '\uD83D\uDEB4 \u6B63\u5E38',
+          opt_fast: '\uD83D\uDE97 \u5FEB',
+          opt_very_fast: '\u2708\uFE0F \u975E\u5E38\u5FEB',
+          reading_placeholder:
+            '\u52A0\u8F7D\u6587\u5B57\u540E\u5C06\u663E\u793A\u5728\u6B64\u5904\u3002',
+          footer:
+            '\u6C38\u4E45\u514D\u8D39 \u00B7 \u65E0\u9700\u8D26\u6237 \u00B7 \u6570\u636E\u4E0D\u4F1A\u4E0A\u4F20',
+          night_aria_on: '\u5207\u6362\u5230\u65E5\u95F4\u6A21\u5F0F',
+          night_aria_off: '\u5207\u6362\u5230\u591C\u95F4\u6A21\u5F0F',
+          no_voices:
+            '\u672A\u627E\u5230\u8BED\u97F3 \u2014 \u8BF7\u5B89\u88C5\u8BED\u8A00\u5305',
+          st_empty: '\u26A0\uFE0F \u8BF7\u5148\u7C98\u8D34\u6587\u5B57\u3002',
+          st_reading: (i, n) =>
+            `\u6B63\u5728\u6717\u8BFB\u7B2C ${i} / ${n} \u6BB5`,
+          st_paused: '\u23F8 \u5DF2\u6682\u505C\u3002',
+          st_done: '\u2705 \u6717\u8BFB\u5B8C\u6BD5\uFF01',
+          st_lang: (l) => `\u8BED\u8A00\uFF1A${l}`,
+          st_no_voices:
+            '\u26A0\uFE0F \u672A\u627E\u5230\u4E2D\u6587\u8BED\u97F3\uFF0C\u8BF7\u5728\u7CFB\u7EDF\u8BBE\u7F6E\u4E2D\u5B89\u88C5\u8BED\u8A00\u5305\u3002',
+        },
+        ta: {
+          htmlLang: 'ta',
+          pageTitle: 'DyslexiRead — படிக்க உதவி கருவி',
+          subtitle: 'மாணவர்களுக்கான இலவச வாசிப்பு கருவி',
+          lbl_lang_group: 'மொழியை தேர்ந்தெடுக்கவும்',
+          lbl_step1: 'படி 1 — உங்கள் உரையை ஒட்டவும்',
+          textarea_label: 'இங்கே உரையை ஒட்டவும்',
+          placeholder: 'உங்கள் தமிழ் உரையை இங்கே ஒட்டவும்…',
+          lbl_step2: 'படி 3 — சத்தமாக படிக்கவும்',
+          btn_play: 'படிக்கவும்',
+          btn_from_start: 'தொடக்கத்தில் இருந்து படிக்கவும்',
+          btn_pause: 'நிறுத்து',
+          btn_resume: 'தொடர்',
+          lbl_step3: 'படி 2 — அமைப்புகளை சரிசெய்யவும்',
+          lbl_fontsize: 'எழுத்து அளவு',
+          lbl_speed: 'வாசிப்பு வேகம்',
+          lbl_voice: 'குரல்',
+          opt_very_slow: '🐢 மிகவும் மெதுவாக',
+          opt_slow: '🚶 மெதுவாக',
+          opt_normal: '🚴 சாதாரணம்',
+          opt_fast: '🚗 வேகமாக',
+          opt_very_fast: '✈️ மிகவும் வேகமாக',
+          reading_placeholder: 'உரையை ஏற்றிய பிறகு இங்கே தோன்றும்.',
+          footer: 'என்றும் இலவசம் · கணக்கு இல்லை · தரவு அனுப்பப்படவில்லை',
+          night_aria_on: 'பகல் பயன்முறைக்கு மாறவும்',
+          night_aria_off: 'இரவு பயன்முறைக்கு மாறவும்',
+          no_voices: 'குரல் இல்லை — மொழி தொகுப்பை நிறுவவும்',
+          st_empty: '⚠️ முதலில் உரையை ஒட்டவும்.',
+          st_reading: (i, n) => `${n} இல் ${i} வது`,
+          st_paused: '⏸ நிறுத்தப்பட்டது.',
+          st_done: '✅ முடிந்தது!',
+          st_lang: (l) => `மொழி: ${l}`,
+          st_no_voices: '⚠️ குரல் கிடைக்கவில்லை. மொழி தொகுப்பை நிறுவவும்.',
+        },
+      };
+
+      /* ── Element refs ─────────────────────────────────────────────────── */
+      const textInput = document.getElementById('text-input');
+      const readingArea = document.getElementById('reading-area');
+      const btnPlay = document.getElementById('btn-play');
+      const btnPause = document.getElementById('btn-pause');
+      const nightToggle = document.getElementById('night-toggle');
+      const fontSlider = document.getElementById('font-slider');
+      const fontSizeVal = document.getElementById('font-size-val');
+      const speedSelect = document.getElementById('speed-select');
+      const voiceSelect = document.getElementById('voice-select');
+      const statusBar = document.getElementById('status-bar');
+      const progressFill = document.getElementById('progress-fill');
+      const progressCont = document.getElementById('progress-container');
+      const langButtons = document.querySelectorAll('.lang-btn');
+
+      /* ── State ────────────────────────────────────────────────────────── */
+      let chunks = [],
+        currentChunk = 0,
+        speaking = false,
+        paused = false;
+      let langCode = 'en',
+        selectedVoice = null;
+
+      /* ── Helpers ──────────────────────────────────────────────────────── */
+      const tr = () => T[langCode];
+      const setStatus = (msg) => {
+        statusBar.textContent = msg;
+      };
+
+      function splitIntoChunks(text, size = 5) {
+        const words = text.trim().replace(/\s+/g, ' ').split(' ');
+        const out = [];
+        for (let i = 0; i < words.length; i += size)
+          out.push(words.slice(i, i + size).join(' '));
+        return out;
+      }
+
+      function displayChunks(arr) {
+        // Space sits outside the <span> so the highlight never covers whitespace
+        readingArea.innerHTML = arr
+          .map((c, i) => `<span class="chunk" data-index="${i}">${c}</span> `)
+          .join('');
+      }
+
+      function highlightChunk(index) {
+        readingArea
+          .querySelectorAll('.chunk')
+          .forEach((el) =>
+            el.classList.toggle('active', +el.dataset.index === index),
+          );
+        const el = readingArea.querySelector(`[data-index="${index}"]`);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const pct = ((index + 1) / chunks.length) * 100;
+        progressFill.style.width = pct + '%';
+        progressCont.setAttribute('aria-valuenow', Math.round(pct));
+      }
+
+      function syncButtons() {
+        const active = speaking || paused;
+        btnPlay.disabled = !paused && (speaking || !chunks.length);
+        btnPause.disabled = !active;
+        document.getElementById('btn-play-icon').textContent = active
+          ? '\u21A9'
+          : '\u25B6';
+        document.getElementById('btn-play-txt').textContent = active
+          ? tr().btn_from_start
+          : tr().btn_play;
+        document.getElementById('btn-pause-icon').textContent = paused
+          ? '\u25B6'
+          : '\u23F8';
+        document.getElementById('btn-pause-txt').textContent = paused
+          ? tr().btn_resume
+          : tr().btn_pause;
+      }
+
+      function stopSpeaking() {
+        window.speechSynthesis.cancel();
+        speaking = false;
+        paused = false;
+        syncButtons();
+      }
+
+      function readChunkAloud(index) {
+        if (index >= chunks.length) {
+          speaking = false;
+          paused = false;
+          syncButtons();
+          setStatus(tr().st_done);
+          return;
+        }
+        currentChunk = index;
+        highlightChunk(index);
+        setStatus(tr().st_reading(index + 1, chunks.length));
+
+        const utt = new SpeechSynthesisUtterance(chunks[index]);
+        if (selectedVoice) {
+          utt.voice = selectedVoice;
+          utt.lang = selectedVoice.lang;
+        } else {
+          utt.lang =
+            [...langButtons].find((b) => b.dataset.code === langCode)?.dataset
+              .lang || 'en-GB';
+        }
+        utt.rate = parseFloat(speedSelect.value);
+        utt.onend = utt.onerror = () => {
+          if (speaking) readChunkAloud(index + 1);
+        };
+        window.speechSynthesis.speak(utt);
+      }
+
+      /* ── Apply language ───────────────────────────────────────────────── */
+      function applyLang(code) {
+        const t = T[code];
+        if (!t) return;
+        langCode = code;
+        document.documentElement.lang = t.htmlLang;
+        document.title = t.pageTitle;
+
+        [
+          ['app-subtitle', 'subtitle'],
+          ['lbl-step1', 'lbl_step1'],
+          ['lbl-step2', 'lbl_step2'],
+          ['lbl-step3', 'lbl_step3'],
+          ['lbl-fontsize', 'lbl_fontsize'],
+          ['lbl-speed', 'lbl_speed'],
+          ['lbl-voice', 'lbl_voice'],
+          ['opt-very-slow', 'opt_very_slow'],
+          ['opt-slow', 'opt_slow'],
+          ['opt-normal', 'opt_normal'],
+          ['opt-fast', 'opt_fast'],
+          ['opt-very-fast', 'opt_very_fast'],
+          ['footer-txt', 'footer'],
+          ['reading-placeholder', 'reading_placeholder'],
+          ['textarea-aria-label', 'textarea_label'],
+        ].forEach(([id, key]) => {
+          const el = document.getElementById(id);
+          if (el) el.textContent = t[key];
+        });
+
+        document
+          .getElementById('lang-group')
+          .setAttribute('aria-label', t.lbl_lang_group);
+        textInput.placeholder = t.placeholder;
+        nightToggle.setAttribute(
+          'aria-label',
+          document.body.classList.contains('night')
+            ? t.night_aria_on
+            : t.night_aria_off,
+        );
+
+        syncButtons();
+        localStorage.setItem('dr-langcode', code);
+        // Tamil needs Noto Sans Tamil; all other languages use OpenDyslexic
+        document.body.classList.toggle('lang-ta', code === 'ta');
+      }
+
+      /* ── Voice picker ─────────────────────────────────────────────────── */
+      function getVoiceList(code) {
+        return window.speechSynthesis
+          .getVoices()
+          .filter((v) => v.lang.toLowerCase().startsWith(code));
+      }
+
+      function populateVoices(code) {
+        const list = getVoiceList(code);
+        voiceSelect.innerHTML = '';
+        if (!list.length) {
+          voiceSelect.innerHTML = `<option disabled>${T[code].no_voices}</option>`;
+          selectedVoice = null;
+          setStatus(T[code].st_no_voices);
+          return;
+        }
+        list.forEach((v, i) => {
+          const o = document.createElement('option');
+          o.value = i;
+          o.textContent = `${v.name} (${v.lang})`;
+          voiceSelect.appendChild(o);
+        });
+        const localIdx = list.findIndex((v) => v.localService);
+        voiceSelect.selectedIndex = localIdx >= 0 ? localIdx : 0;
+        selectedVoice = list[voiceSelect.selectedIndex];
+        const saved = localStorage.getItem('dr-voice-' + code);
+        if (saved) {
+          const si = list.findIndex((v) => v.name === saved);
+          if (si >= 0) {
+            voiceSelect.selectedIndex = si;
+            selectedVoice = list[si];
+          }
+        }
+      }
+
+      voiceSelect.addEventListener('change', function () {
+        const list = getVoiceList(langCode);
+        selectedVoice = list[+this.value] || null;
+        if (selectedVoice)
+          localStorage.setItem('dr-voice-' + langCode, selectedVoice.name);
+      });
+
+      window.speechSynthesis.addEventListener('voiceschanged', () =>
+        populateVoices(langCode),
+      );
+
+      // Chrome silently kills the speech queue after ~15 s when the tab is
+      // backgrounded. This keepalive detects the gap and resumes seamlessly.
+      setInterval(() => {
+        if (speaking && !window.speechSynthesis.speaking)
+          readChunkAloud(currentChunk);
+      }, 14000);
+
+      /* ── Auto-load on paste / type (debounced 400 ms) ─────────────────── */
+      let loadDebounce = null;
+      textInput.addEventListener('input', () => {
+        clearTimeout(loadDebounce);
+        loadDebounce = setTimeout(() => {
+          const raw = textInput.value.trim();
+          stopSpeaking();
+          if (!raw) {
+            chunks = [];
+            currentChunk = 0;
+            readingArea.innerHTML = `<p class="reading-placeholder" id="reading-placeholder">${tr().reading_placeholder}</p>`;
+            progressFill.style.width = '0%';
+            syncButtons();
+            return;
+          }
+          chunks = splitIntoChunks(raw);
+          currentChunk = 0;
+          displayChunks(chunks);
+          progressFill.style.width = '0%';
+          syncButtons();
+        }, 400);
+      });
+
+      /* ── Playback ─────────────────────────────────────────────────────── */
+      btnPlay.addEventListener('click', () => {
+        if (!chunks.length) {
+          setStatus(tr().st_empty);
+          return;
+        }
+        window.speechSynthesis.cancel();
+        currentChunk = 0;
+        speaking = true;
+        paused = false;
+        progressFill.style.width = '0%';
+        progressCont.setAttribute('aria-valuenow', 0);
+        syncButtons();
+        readChunkAloud(0);
+      });
+
+      btnPause.addEventListener('click', () => {
+        if (speaking) {
+          window.speechSynthesis.cancel();
+          speaking = false;
+          paused = true;
+          syncButtons();
+          setStatus(tr().st_paused);
+        } else if (paused) {
+          speaking = true;
+          paused = false;
+          syncButtons();
+          readChunkAloud(currentChunk);
+        }
+      });
+
+      /* ── Settings ─────────────────────────────────────────────────────── */
+      fontSlider.addEventListener('input', function () {
+        readingArea.style.fontSize = this.value + 'px';
+        fontSizeVal.textContent = this.value + 'px';
+        localStorage.setItem('dr-fontsize', this.value);
+      });
+
+      speedSelect.addEventListener('change', function () {
+        localStorage.setItem('dr-speed', this.value);
+      });
+
+      nightToggle.addEventListener('click', () => {
+        const night = document.body.classList.toggle('night');
+        nightToggle.textContent = night ? '\u2600\uFE0F' : '\uD83C\uDF19';
+        nightToggle.setAttribute('aria-pressed', String(night));
+        nightToggle.setAttribute(
+          'aria-label',
+          night ? tr().night_aria_on : tr().night_aria_off,
+        );
+        localStorage.setItem('dr-night', String(night));
+      });
+
+      /* ── Language switcher ────────────────────────────────────────────── */
+      const LANG_NAMES = {
+        ms: 'Bahasa Melayu',
+        en: 'English',
+        ta: 'தமிழ்',
+        zh: '\u4E2D\u6587',
+      };
+      langButtons.forEach((btn) =>
+        btn.addEventListener('click', function () {
+          langButtons.forEach((b) => b.classList.remove('active'));
+          this.classList.add('active');
+          applyLang(this.dataset.code);
+          populateVoices(this.dataset.code);
+          setStatus(
+            T[this.dataset.code].st_lang(LANG_NAMES[this.dataset.code]),
+          );
+        }),
+      );
+
+      /* ── Keyboard shortcuts ───────────────────────────────────────────── */
+      // Space = play / resume from pause   ←/→ = step through chunks
+      document.addEventListener('keydown', (e) => {
+        if (document.activeElement === textInput) return;
+        if (e.key === ' ') {
+          e.preventDefault();
+          paused ? btnPause.click() : btnPlay.click();
+        }
+        if (e.key === 'ArrowRight' && chunks.length) {
+          stopSpeaking();
+          highlightChunk(Math.min(++currentChunk, chunks.length - 1));
+        }
+        if (e.key === 'ArrowLeft' && chunks.length) {
+          stopSpeaking();
+          highlightChunk(Math.max(--currentChunk, 0));
+        }
+      });
+
+      /* ── Init ─────────────────────────────────────────────────────────── */
+      (function init() {
+        const sz = localStorage.getItem('dr-fontsize');
+        if (sz) {
+          fontSlider.value = sz;
+          readingArea.style.fontSize = sz + 'px';
+          fontSizeVal.textContent = sz + 'px';
+        }
+
+        const sp = localStorage.getItem('dr-speed');
+        if (sp) speedSelect.value = sp;
+
+        if (localStorage.getItem('dr-night') === 'true') {
+          document.body.classList.add('night');
+          nightToggle.textContent = '\u2600\uFE0F';
+          nightToggle.setAttribute('aria-pressed', 'true');
+        }
+
+        const code = localStorage.getItem('dr-langcode') || 'en';
+        langButtons.forEach((b) =>
+          b.classList.toggle('active', b.dataset.code === code),
+        );
+        applyLang(code);
+        populateVoices(code);
+      })();
+
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker
+          .register('/service-worker.js')
+          .catch((err) =>
+            console.warn('Service worker registration failed:', err),
+          );
+      }
+    </script>
+  </body>
+</html>
