@@ -1,6 +1,7 @@
 # 📚 DyslexiRead
 
 **Free, browser-based reading tool for students with dyslexia.**
+
 Built for Malaysia's multilingual classrooms: Malay, English, Tamil, and Chinese: all on-device with no account required.
 
 ![Zero Dependencies](https://img.shields.io/badge/Dependencies-Zero-brightgreen)
