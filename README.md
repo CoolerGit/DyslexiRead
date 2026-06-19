@@ -138,15 +138,6 @@ Zero runtime dependencies. Zero build tools required.
 
 ---
 
-## Roadmap
-
-- [ ] PDF upload support (read from file, not just paste)
-- [ ] Paragraph-level chunk control
-- [ ] Export reading session as audio
-- [ ] Malay-specific dyslexia word frequency analysis
-
----
-
 ## Contributing
 
 Pull requests are welcome. Please keep the zero-dependency constraint: no npm, no bundler, no framework. The goal is a tool any teacher can deploy by uploading a single file.
