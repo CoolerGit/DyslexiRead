@@ -64,7 +64,7 @@ cd dyslexiread
 1. Fork this repository
 2. Go to **Settings → Pages**
 3. Set source to the `main` branch, root folder
-4. Your app will be live at `https://your-username.github.io/dyslexiread/`
+4. Your app will be live at `https://CoolerGit.github.io/dyslexiread/`
 
 ### Option 3: Just download the file
 Download `index.html` and open it it any browser, preferably Microsoft Edge.
