@@ -134,8 +134,6 @@ The chrome backgrounding bug (where the browser silently kills the speech queue 
 | Fonts | OpenDyslexic (CDN), Noto Sans Tamil (Google Fonts) |
 | Offline | Service Worker + Web App Manifest |
 
-Zero runtime dependencies. Zero build tools required.
-
 ---
 
 ## Contributing
