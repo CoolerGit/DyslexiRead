@@ -51,7 +51,7 @@ It uses the **OpenDyslexic** font, adjustable text sizes, and your device's buil
 
 ## Getting Started
 
-DyslexiRead is a single HTML file. No build step, no server, no npm install.
+DyslexiRead is a single HTML file.
 
 ### Option 1: Open locally
 ```bash
@@ -138,7 +138,7 @@ The chrome backgrounding bug (where the browser silently kills the speech queue 
 
 ## Contributing
 
-Pull requests are welcome. Please keep the zero-dependency constraint: no npm, no bundler, no framework. The goal is a tool any teacher can deploy by uploading a single file.
+Pull requests are welcome.
 
 1. Fork the repository
 2. Make your changes in `index.html`
