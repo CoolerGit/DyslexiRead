@@ -3,11 +3,10 @@
 **Free, browser-based reading tool for students with dyslexia.**
 Built for Malaysia's multilingual classrooms: Malay, English, Tamil, and Chinese — all in one place, all on-device, no account required.
 
-![HTML](https://img.shields.io/badge/HTML-only-orange?logo=html5&logoColor=white)
-![Zero Dependencies](https://img.shields.io/badge/dependencies-zero-brightgreen)
-![Privacy First](https://img.shields.io/badge/privacy-100%25%20local-blue)
-![Free Forever](https://img.shields.io/badge/cost-free%20forever-purple)
-![PWA Ready](https://img.shields.io/badge/PWA-installable-indigo)
+![Zero Dependencies](https://img.shields.io/badge/Dependencies-Zero-brightgreen)
+![Privacy First](https://img.shields.io/badge/Privacy-100%25%20local-blue)
+![Free Forever](https://img.shields.io/badge/Cost-Free%20forever-purple)
+![PWA Ready](https://img.shields.io/badge/PWA-Installable-indigo)
 
 ---
 
