@@ -1,7 +1,7 @@
 # 📚 DyslexiRead
 
 **Free, browser-based reading tool for students with dyslexia.**
-Built for Malaysia's multilingual classrooms: Malay, English, Tamil, and Chinese — all in one place, all on-device, no account required.
+Built for Malaysia's multilingual classrooms: Malay, English, Tamil, and Chinese: all on-device with no account required.
 
 ![Zero Dependencies](https://img.shields.io/badge/Dependencies-Zero-brightgreen)
 ![Privacy First](https://img.shields.io/badge/Privacy-100%25%20local-blue)
@@ -12,7 +12,7 @@ Built for Malaysia's multilingual classrooms: Malay, English, Tamil, and Chinese
 
 ## What It Does
 
-DyslexiRead reads your text aloud, word-chunk by word-chunk, with each group highlighted in sync so your eyes always know exactly where to follow. It uses the **OpenDyslexic** font, adjustable text sizes, and your device's built-in voices — no plugins, no subscriptions, no data leaving your device.
+DyslexiRead reads your text aloud, word-chunk by word-chunk, with each group highlighted in sync so your eyes always know exactly where to follow. It uses the **OpenDyslexic** font, adjustable text sizes, and your device's built-in voices: no plugins, no subscriptions, no data leaving your device.
 
 ---
 
@@ -44,8 +44,6 @@ DyslexiRead reads your text aloud, word-chunk by word-chunk, with each group hig
 | 🇮🇳 தமிழ் (Tamil) | ⚠️ Limited (install voice) | ✅ Good | ✅ Good | ⚠️ Limited |
 
 > Tamil text is displayed in **Noto Sans Tamil** (OpenDyslexic does not cover the Tamil script). All other languages use OpenDyslexic.
-
-Full voice installation instructions for every device are in [`disclaimer.html`](./disclaimer.html).
 
 ---
 
