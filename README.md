@@ -14,6 +14,8 @@ Built for Malaysia's multilingual classrooms, featuring Malay, English, Tamil, a
 
 DyslexiRead reads your text aloud, word-chunk by word-chunk, with each group highlighted in sync so your eyes always know exactly where to follow. It uses the **OpenDyslexic** font, adjustable text sizes, and your device's built-in voices: no plugins, no subscriptions, no data leaving your device.
 
+![DyslexiRead screenshot](./DyslexiRead.png)
+
 ---
 
 ## Features
