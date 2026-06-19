@@ -5,7 +5,7 @@ Built for Malaysia's multilingual classrooms: Malay, English, Tamil, and Chinese
 
 ![Zero Dependencies](https://img.shields.io/badge/Dependencies-Zero-brightgreen)
 ![Privacy First](https://img.shields.io/badge/Privacy-100%25%20local-blue)
-![Free Forever](https://img.shields.io/badge/Cost-Free%20forever-purple)
+![Free Forever](https://img.shields.io/badge/Cost-Free%20Forever-purple)
 ![PWA Ready](https://img.shields.io/badge/PWA-Installable-indigo)
 
 ---
