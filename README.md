@@ -32,7 +32,6 @@ It uses the **OpenDyslexic** font, adjustable text sizes, and your device's buil
 | **Day / Night mode** | High-contrast dark theme for low-light reading |
 | **Progress bar** | Visual reading progress with ARIA support |
 | **Keyboard shortcuts** | Space to play/pause; arrow keys to step through chunks |
-| **PWA installable** | Add to Home Screen on Android or iPhone; works fully offline |
 | **100% private** | Everything runs in the browser; nothing is ever sent to a server |
 
 ---
