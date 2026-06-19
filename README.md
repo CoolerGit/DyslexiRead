@@ -55,7 +55,7 @@ DyslexiRead is a single HTML file.
 
 ### Option 1: Open locally
 ```bash
-git clone https://github.com/your-username/dyslexiread.git
+git clone https://github.com/CoolerGit/dyslexiread.git
 cd dyslexiread
 # Open index.html in your browser
 ```
