@@ -67,7 +67,7 @@ cd dyslexiread
 4. Your app will be live at `https://your-username.github.io/dyslexiread/`
 
 ### Option 3: Just download the file
-Download `index.html`, open it in any modern browser. That's it.
+Download `index.html` and open it it any browser, preferably Microsoft Edge.
 
 ---
 
